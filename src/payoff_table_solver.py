@@ -22,7 +22,7 @@ def solve(A: np.array):
 
 
 if __name__ == '__main__':
-    v, x, y = solve_payoff_table(
+    v, X, Y = solve_payoff_table(
         # np.array(
         #     [[1, -1, 2],
         #      [-1, 2, 0],
@@ -35,6 +35,7 @@ if __name__ == '__main__':
              [1, 2]]
         )
     )
-    print("Value of the game:", v)
-    print("Optimal strategy of the first player:", x)
-    print("Optimal strategy of the second player:", y)
+
+    print(f'Value of the game: {v}',
+          f'Optimal strategy of the first player: {X}',
+          f'Optimal strategy of the second player: {Y}', sep='\n')

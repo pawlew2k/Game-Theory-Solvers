@@ -1,48 +1,61 @@
+import itertools
 from itertools import permutations
 from math import factorial
 import numpy as np
 
-from strategies import strategies
+from strategies import find_strategies, find_all_strategies, extend_strategies, strategies_with_caret
 from src.payoff_table_solver import solve_payoff_table
 
 
 def blotto_game(strategies1, strategies2, score_for_killed=True):
+    if len(strategies1[0]) != len(strategies2[0]):
+        raise ValueError('Number of bridgeheads must be the same in both strategies')
+    else:
+        num_permutations = len(strategies1[0])
+
     arr = np.zeros((len(strategies1), len(strategies2)))
     for idx1, strategy1 in enumerate(strategies1):
         for idx2, strategy2 in enumerate(strategies2):
             score = 0
-            for split1 in permutations(strategy1):
-                for split2 in permutations(strategy2):
-                    bridgeheads = zip(split1, split2)
-                    for unit1, unit2 in bridgeheads:
-                        unit1, unit2 = int(unit1), int(unit2)
+            for permuted_strategy1 in permutations(strategy1):
+                for permuted_strategy2 in permutations(strategy2):
+                    bridgeheads = zip(permuted_strategy1, permuted_strategy2)
+                    for units1, units2 in bridgeheads:
+                        units1, units2 = int(units1), int(units2)
 
-                        if unit1 > unit2:
+                        if units1 > units2:
                             score += 1
                             if score_for_killed:
-                                score += unit2
-                        if unit2 > unit1:
+                                score += units2
+                        if units2 > units1:
                             score -= 1
                             if score_for_killed:
-                                score -= unit1
+                                score -= units1
 
-            score /= factorial(len(strategies1[0])) * factorial(len(strategies2[0]))
+            score /= num_permutations * num_permutations
             arr[idx1, idx2] = float(score)
     return arr
 
 
 if __name__ == '__main__':
     num_bridgeheads = 2
-    strategiesB = strategies(6, num_bridgeheads)
-    strategiesK = strategies(4, num_bridgeheads)
+    strategiesB = find_strategies(6, num_bridgeheads)
+    strategiesK = find_strategies(3, num_bridgeheads)
     A = blotto_game(strategiesB, strategiesK, score_for_killed=False)
-    v, x, y = solve_payoff_table(A)
+    v, X, Y = solve_payoff_table(A)
+    extended_strategiesB, extended_X = extend_strategies(strategiesB, X)
+    extended_strategiesK, extended_Y = extend_strategies(strategiesK, Y)
 
-    print(f'{strategiesB=}')
-    print(f'{strategiesK=}')
-    print(f'A=\n{A}')
-    print(f'{v=}')
-    print(f'{x=}')
-    print(f'{y=}')
-
-
+    print(f'Omega_B^={strategies_with_caret(strategiesB)}',
+          f'Omega_K^={strategies_with_caret(strategiesK)}',
+          '',
+          f'A^=\n{A}',
+          f'X^={X}',
+          f'Y^={Y}',
+          f'{v=}',
+          '',
+          f'Omega_B={extended_strategiesB}',
+          f'X={extended_X}',
+          '',
+          f'Omega_K={extended_strategiesK}',
+          f'Y={extended_Y}', sep='\n')
