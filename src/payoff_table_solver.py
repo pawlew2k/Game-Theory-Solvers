@@ -15,7 +15,7 @@ def solve(A: np.array):
     A_ub = np.concatenate((A, np.full(shape=(m, 1), fill_value=-1)), axis=1)
     sum_is_one = np.concatenate((np.ones(n), [0])).reshape(1, -1)
     bounds = [[0, None] for _ in range(n)] + [[None, None]]
-    result = linprog(c, A_ub=A_ub, b_ub=b_ub, A_eq=sum_is_one, b_eq=[1], bounds=bounds, method='highs')
+    result = linprog(c, A_ub, b_ub, A_eq=sum_is_one, b_eq=[1], bounds=bounds, method='highs')
     game_value = result.fun
     second_player_strategy = result.x[:-1].tolist()
     return game_value, second_player_strategy
