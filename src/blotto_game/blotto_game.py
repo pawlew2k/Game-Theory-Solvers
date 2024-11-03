@@ -1,6 +1,4 @@
-import itertools
 from itertools import permutations
-from math import factorial
 import numpy as np
 
 from strategies import find_strategies, find_all_strategies, extend_strategies, strategies_with_caret
@@ -42,6 +40,7 @@ if __name__ == '__main__':
     strategiesB = find_strategies(6, num_bridgeheads)
     strategiesK = find_strategies(3, num_bridgeheads)
     A = blotto_game(strategiesB, strategiesK, score_for_killed=False)
+
     v, X, Y = solve_payoff_table(A)
     extended_strategiesB, extended_X = extend_strategies(strategiesB, X)
     extended_strategiesK, extended_Y = extend_strategies(strategiesK, Y)
