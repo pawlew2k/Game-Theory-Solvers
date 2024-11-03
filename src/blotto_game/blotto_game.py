@@ -5,7 +5,7 @@ from strategies import find_strategies, find_all_strategies, extend_strategies, 
 from src.payoff_table_solver import solve_payoff_table
 
 
-def blotto_game(strategies1, strategies2, score_for_killed=True):
+def blotto_game(strategies1, strategies2, points_for_kills=True):
     if len(strategies1[0]) != len(strategies2[0]):
         raise ValueError('Number of bridgeheads must be the same in both strategies')
     else:
@@ -23,11 +23,11 @@ def blotto_game(strategies1, strategies2, score_for_killed=True):
 
                         if units1 > units2:
                             score += 1
-                            if score_for_killed:
+                            if points_for_kills:
                                 score += units2
                         if units2 > units1:
                             score -= 1
-                            if score_for_killed:
+                            if points_for_kills:
                                 score -= units1
 
             score /= num_permutations * num_permutations
@@ -36,10 +36,10 @@ def blotto_game(strategies1, strategies2, score_for_killed=True):
 
 
 if __name__ == '__main__':
-    num_bridgeheads = 2
-    strategiesB = find_strategies(6, num_bridgeheads)
-    strategiesK = find_strategies(3, num_bridgeheads)
-    A = blotto_game(strategiesB, strategiesK, score_for_killed=False)
+    num_bridgeheads = 3
+    strategiesB = find_strategies(8, num_bridgeheads)
+    strategiesK = find_strategies(5, num_bridgeheads)
+    A = blotto_game(strategiesB, strategiesK, points_for_kills=True)
 
     v, X, Y = solve_payoff_table(A)
     extended_strategiesB, extended_X = extend_strategies(strategiesB, X)
