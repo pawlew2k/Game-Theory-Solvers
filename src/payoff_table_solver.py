@@ -1,14 +1,16 @@
+from typing import Tuple
+
 import numpy as np
 from scipy.optimize import linprog
 
 
-def solve_payoff_table(A: np.array):
+def solve_payoff_table(A: np.array) -> Tuple[int, list[float], list[float]]:
     game_value, second_player_strategy = solve(A)
     _, first_player_strategy = solve(-A.T)
     return game_value, first_player_strategy, second_player_strategy
 
 
-def solve(A: np.array):
+def solve(A: np.array) -> Tuple[int, list[float]]:
     m, n = np.shape(A)
     c = np.concatenate((np.zeros(n), [1]))
     b_ub = np.zeros(m)

@@ -1,17 +1,18 @@
 from itertools import permutations
 import numpy as np
+from math import factorial
 
 from strategies import find_strategies, find_all_strategies, extend_strategies, strategies_with_caret
 from src.payoff_table_solver import solve_payoff_table
 
 
-def blotto_game(strategies1, strategies2, points_for_kills=True):
+def blotto_game(strategies1, strategies2, points_for_kills=True) -> np.array:
     if len(strategies1[0]) != len(strategies2[0]):
         raise ValueError('Number of bridgeheads must be the same in both strategies')
     else:
-        num_permutations = len(strategies1[0])
+        num_permutations = factorial(len(strategies1[0]))
 
-    arr = np.zeros((len(strategies1), len(strategies2)))
+    matrix = np.zeros((len(strategies1), len(strategies2)))
     for idx1, strategy1 in enumerate(strategies1):
         for idx2, strategy2 in enumerate(strategies2):
             score = 0
@@ -29,10 +30,9 @@ def blotto_game(strategies1, strategies2, points_for_kills=True):
                             score -= 1
                             if points_for_kills:
                                 score -= units1
-
             score /= num_permutations * num_permutations
-            arr[idx1, idx2] = float(score)
-    return arr
+            matrix[idx1, idx2] = float(score)
+    return matrix
 
 
 if __name__ == '__main__':
